@@ -10,5 +10,6 @@
     <string name="Button_Clear">Clear db</string>
     <string name="Button_About">About</string>
     <string name="Button_minus">-1 page</string>
+    <string name="TextView_Content">Total: ? pages</string>
 
 </resources>

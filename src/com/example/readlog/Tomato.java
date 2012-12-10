@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Gravity;
 import android.os.Vibrator;
@@ -25,6 +26,8 @@ public class Tomato extends Activity {
 
 	private Button button_one, button_zero, button_history, button_clear,
 			button_about, button_minus;
+	
+	private TextView textNum;
 
 	protected static final int STOP = 0x10000;
 	protected static final int NEXT = 0x10001;
@@ -67,7 +70,8 @@ public class Tomato extends Activity {
 		button_clear = (Button) findViewById(R.id.button4);
 		button_about = (Button) findViewById(R.id.button5);
 		button_minus = (Button) findViewById(R.id.button6);
-
+		textNum = (TextView) findViewById(R.id.textView1);
+				
 		button_clear.setEnabled(false);
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
@@ -87,13 +91,8 @@ public class Tomato extends Activity {
 				int day = c.get(Calendar.DAY_OF_MONTH);
 				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
 						+ "-" + (day < 10 ? ("0" + day) : day);
-
-				Toast toast;
-				toast = Toast.makeText(getApplicationContext(),
-						"Total pages read: " + Integer.toString(TotalNum),
-						Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.BOTTOM, 0, 0);
-				toast.show();
+				
+				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");				
 				TotalNum = 0;
 			}
 		});
@@ -115,12 +114,7 @@ public class Tomato extends Activity {
 				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
 						+ "-" + (day < 10 ? ("0" + day) : day);
 
-				Toast toast;
-				toast = Toast.makeText(getApplicationContext(),
-						"Total pages read: " + Integer.toString(TotalNum),
-						Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.BOTTOM, 0, 0);
-				toast.show();
+				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");				
 				TotalNum = 0;
 			}
 		});
@@ -142,12 +136,7 @@ public class Tomato extends Activity {
 				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
 						+ "-" + (day < 10 ? ("0" + day) : day);
 
-				Toast toast;
-				toast = Toast.makeText(getApplicationContext(),
-						"Total pages read: " + Integer.toString(TotalNum),
-						Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.BOTTOM, 0, 0);
-				toast.show();
+				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");				
 				TotalNum = 0;
 			}
 		});
