@@ -70,7 +70,7 @@ public class History extends Activity {
 
 	private static XYMultipleSeriesDataset getBarDataset(Context cxt) {
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-		CategorySeries series = new CategorySeries("最近31天");
+		CategorySeries series = new CategorySeries("Books reading log");
 
 		Cursor c = db.rawQuery("SELECT _id, mydate, mydata FROM mytable", new String[]{});  
         while (c.moveToNext()) {
@@ -120,9 +120,9 @@ public class History extends Activity {
 	}
 
 	private static void setChartSettings(XYMultipleSeriesRenderer renderer) {
-		renderer.setChartTitle("最近31天");
-		renderer.setXTitle("日期");
-		renderer.setYTitle("番茄数");
+		renderer.setChartTitle("Recent 31 days");
+		renderer.setXTitle("Date");
+		renderer.setYTitle("Pages read");
 		renderer.setYAxisMin(0);
 		renderer.setYAxisMax(31);
 		// set it by default

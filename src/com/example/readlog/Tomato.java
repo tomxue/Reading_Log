@@ -93,6 +93,7 @@ public class Tomato extends Activity {
 						+ "-" + (day < 10 ? ("0" + day) : day);
 				
 				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");				
+				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
 			}
 		});
@@ -114,7 +115,8 @@ public class Tomato extends Activity {
 				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
 						+ "-" + (day < 10 ? ("0" + day) : day);
 
-				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");				
+				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");		
+				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
 			}
 		});
@@ -136,7 +138,8 @@ public class Tomato extends Activity {
 				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
 						+ "-" + (day < 10 ? ("0" + day) : day);
 
-				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");				
+				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");		
+				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
 			}
 		});

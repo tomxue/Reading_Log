@@ -5,8 +5,8 @@
     <string name="title_activity_main">Readlog</string>
     <string name="Button_one">1 page</string>
     <string name="Button_zero">0 page</string>
-    <string name="Button_History">History</string>
-    <string name="history_title">Tomato History</string>
+    <string name="Button_History">Log</string>
+    <string name="history_title">Books reading log</string>
     <string name="Button_Clear">Clear db</string>
     <string name="Button_About">About</string>
     <string name="Button_minus">-1 page</string>
