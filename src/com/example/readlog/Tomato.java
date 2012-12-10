@@ -72,7 +72,7 @@ public class Tomato extends Activity {
 		button_minus = (Button) findViewById(R.id.button6);
 		textNum = (TextView) findViewById(R.id.textView1);
 				
-		button_clear.setEnabled(false);
+		button_clear.setEnabled(true);
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
