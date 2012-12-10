@@ -20,7 +20,7 @@ import android.widget.Toast;
 import android.view.Gravity;
 import android.os.Vibrator;
 
-public class Tomato extends Activity {
+public class ReadLog extends Activity {
 
 	private static final String TAG = "TomXue";
 
@@ -148,7 +148,7 @@ public class Tomato extends Activity {
 			public void onClick(View v) {
 				// Switch to report page
 				Intent intent = new Intent();
-				intent.setClass(Tomato.this, History.class);
+				intent.setClass(ReadLog.this, History.class);
 				startActivity(intent);
 			}
 		});
