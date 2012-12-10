@@ -3,6 +3,7 @@ package com.example.readlog;
 import java.util.Calendar;
 import com.example.readlog.R;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.app.Activity;
 import android.app.Service;
 import android.content.ContentValues;
@@ -10,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +20,9 @@ import android.view.Gravity;
 import android.os.Vibrator;
 
 public class Tomato extends Activity {
+
+	private static final String TAG = "TomXue";
+
 	private Button button_one, button_zero, button_history, button_clear,
 			button_about, button_minus;
 
@@ -27,12 +32,22 @@ public class Tomato extends Activity {
 	private static String mydate_key;
 	private final String DBNAME = "readlog.db";
 	private static SQLiteDatabase db;
+	private static PowerManager.WakeLock mWakeLock;
 	private static Vibrator vt;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// screen kept on related
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "TomXue");
+		try {
+			mWakeLock.acquire();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		vt = (Vibrator) getApplication().getSystemService(
 				Service.VIBRATOR_SERVICE);
@@ -54,6 +69,7 @@ public class Tomato extends Activity {
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
+
 				// 每结束一个page，再操作db
 				dbHandler(1);
 
@@ -142,7 +158,7 @@ public class Tomato extends Activity {
 				toast = Toast.makeText(getApplicationContext(),
 						"Author: Tom Xue" + "\n"
 								+ "Email: tomxue0126@gmail.com" + "\n"
-								+ "https://github.com/tomxue/Tom-ato.git",
+								+ "https://github.com/tomxue/Reading_Log.git",
 						Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.BOTTOM, 0, 0);
 				toast.show();
@@ -211,5 +227,21 @@ public class Tomato extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+
+	public void onPause() {
+		super.onPause();
+
+		if (mWakeLock.isHeld())
+			mWakeLock.release();
+		Log.v(TAG, "onPause");
+	}
+
+	public void onStop() {
+		super.onStop();
+
+		if (mWakeLock.isHeld())
+			mWakeLock.release();
+		Log.v(TAG, "onPause");
 	}
 }
