@@ -34,6 +34,7 @@ public class Tomato extends Activity {
 	private static SQLiteDatabase db;
 	private static PowerManager.WakeLock mWakeLock;
 	private static Vibrator vt;
+	private static int TotalNum;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,8 @@ public class Tomato extends Activity {
 		button_about = (Button) findViewById(R.id.button5);
 		button_minus = (Button) findViewById(R.id.button6);
 
+		button_clear.setEnabled(false);
+
 		button_one.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 
@@ -84,6 +87,14 @@ public class Tomato extends Activity {
 				int day = c.get(Calendar.DAY_OF_MONTH);
 				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
 						+ "-" + (day < 10 ? ("0" + day) : day);
+
+				Toast toast;
+				toast = Toast.makeText(getApplicationContext(),
+						"Total pages read: " + Integer.toString(TotalNum),
+						Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.BOTTOM, 0, 0);
+				toast.show();
+				TotalNum = 0;
 			}
 		});
 
@@ -103,6 +114,14 @@ public class Tomato extends Activity {
 				int day = c.get(Calendar.DAY_OF_MONTH);
 				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
 						+ "-" + (day < 10 ? ("0" + day) : day);
+
+				Toast toast;
+				toast = Toast.makeText(getApplicationContext(),
+						"Total pages read: " + Integer.toString(TotalNum),
+						Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.BOTTOM, 0, 0);
+				toast.show();
+				TotalNum = 0;
 			}
 		});
 
@@ -122,6 +141,14 @@ public class Tomato extends Activity {
 				int day = c.get(Calendar.DAY_OF_MONTH);
 				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
 						+ "-" + (day < 10 ? ("0" + day) : day);
+
+				Toast toast;
+				toast = Toast.makeText(getApplicationContext(),
+						"Total pages read: " + Integer.toString(TotalNum),
+						Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.BOTTOM, 0, 0);
+				toast.show();
+				TotalNum = 0;
 			}
 		});
 
@@ -178,44 +205,48 @@ public class Tomato extends Activity {
 		boolean dbitem_exist = false;
 		Cursor c = db.rawQuery("SELECT _id, mydate, mydata FROM mytable",
 				new String[] {});
-		while (c.moveToNext()) { // 有则替换
+		while (c.moveToNext()) { // 如果在数据库中找到当日日期，则更新当日数据和TotalNum
 			String mydate_item = c.getString(c.getColumnIndex("mydate"));
 			if (mydate_item.equals(mydate_key)) {
 				mydata_dbitem = c.getInt(c.getColumnIndex("mydata"));
 				cv = new ContentValues();
-				if (pages == 1)
+				if (pages == 1) {
 					cv.put("mydata", 1 + mydata_dbitem);
-				else if (pages == 0)
+					TotalNum = TotalNum + 1 + mydata_dbitem;
+				} else if (pages == 0) {
 					cv.put("mydata", 0 + mydata_dbitem);
-				else if (pages == -1) {
-					if (mydata_dbitem > 0)
+					TotalNum = TotalNum + 0 + mydata_dbitem;
+				} else if (pages == -1) {
+					if (mydata_dbitem > 0) {
 						cv.put("mydata", -1 + mydata_dbitem);
-					else
+						TotalNum = TotalNum - 1 + mydata_dbitem;
+					} else
 						cv.put("mydata", 0);
 				}
 				// 更新数据
 				db.update("mytable", cv, "mydate = ?",
 						new String[] { mydate_key });
 				dbitem_exist = true;
+			} else { // 如果在数据库中遇到非当日日期，则只更新TotalNum
+				mydata_dbitem = c.getInt(c.getColumnIndex("mydata"));
+				TotalNum = TotalNum + mydata_dbitem;
 			}
 		}
+
 		c.close();
 
-		// 无则插入
+		// 如果当日日期不在数据库中，则插入当日日期的数据
 		if (dbitem_exist == false) {
 			// ContentValues以键值对的形式存放数据
 			cv = new ContentValues();
 			cv.put("mydate", mydate_key);
-			if (pages == 1)
-				cv.put("mydata", 1 + mydata_dbitem);
-			else if (pages == 0)
-				cv.put("mydata", 0 + mydata_dbitem);
-			else if (pages == -1) {
-				if (mydata_dbitem > 0)
-					cv.put("mydata", -1 + mydata_dbitem);
-				else
-					cv.put("mydata", 0);
-			}
+			if (pages == 1) {
+				cv.put("mydata", 1);
+				TotalNum = TotalNum + 1;
+			} else if (pages == 0)
+				cv.put("mydata", 0);
+			else if (pages == -1)
+				cv.put("mydata", 0);
 			// 插入ContentValues中的数据
 			db.insert("mytable", null, cv);
 		}
