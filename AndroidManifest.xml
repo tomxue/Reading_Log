@@ -1,0 +1,37 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.readlog"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="12"
+        android:targetSdkVersion="15" />
+
+    <uses-permission android:name = "android.permission.WAKE_LOCK" /> 
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".Tomato"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.readlog.History"
+            android:label="@string/history_title" >
+        </activity>
+         <service android:name="com.example.readlog.MusicService">
+          <intent-filter>
+              <action android:name="com.example.tompomodoros.MUSIC" />
+              <category android:name="android.intent.category.default" />
+          </intent-filter>
+        </service>  
+    </application>
+
+</manifest>
