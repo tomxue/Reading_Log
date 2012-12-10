@@ -3,7 +3,6 @@ package com.example.readlog;
 import java.util.Calendar;
 import com.example.readlog.R;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.app.Activity;
 import android.app.Service;
 import android.content.ContentValues;
@@ -14,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +35,6 @@ public class ReadLog extends Activity {
 	private static String mydate_key;
 	private final String DBNAME = "readlog.db";
 	private static SQLiteDatabase db;
-	private static PowerManager.WakeLock mWakeLock;
 	private static Vibrator vt;
 	private static int TotalNum;
 
@@ -44,14 +43,12 @@ public class ReadLog extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		// screen kept on related
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "TomXue");
-		try {
-			mWakeLock.acquire();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// to keep the screen on 
+		// WakeLock does not work...
+//		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "TomXue");
+//		mWakeLock.acquire();
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); 
 
 		vt = (Vibrator) getApplication().getSystemService(
 				Service.VIBRATOR_SERVICE);
@@ -72,7 +69,7 @@ public class ReadLog extends Activity {
 		button_minus = (Button) findViewById(R.id.button6);
 		textNum = (TextView) findViewById(R.id.textView1);
 				
-		button_clear.setEnabled(true);
+		button_clear.setEnabled(false);
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
@@ -255,16 +252,16 @@ public class ReadLog extends Activity {
 	public void onPause() {
 		super.onPause();
 
-		if (mWakeLock.isHeld())
-			mWakeLock.release();
+//		if (mWakeLock.isHeld())
+//			mWakeLock.release();
 		Log.v(TAG, "onPause");
 	}
 
 	public void onStop() {
 		super.onStop();
 
-		if (mWakeLock.isHeld())
-			mWakeLock.release();
-		Log.v(TAG, "onPause");
+//		if (mWakeLock.isHeld())
+//			mWakeLock.release();
+		Log.v(TAG, "onStop");
 	}
 }

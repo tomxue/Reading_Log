@@ -122,7 +122,7 @@ public class History extends Activity {
 	private static void setChartSettings(XYMultipleSeriesRenderer renderer) {
 		renderer.setChartTitle("Recent 31 days");
 		renderer.setXTitle("Date");
-		renderer.setYTitle("Pages read");
+		renderer.setYTitle("Pages");
 		renderer.setYAxisMin(0);
 		renderer.setYAxisMax(31);
 		// set it by default
