@@ -70,7 +70,7 @@ public class History extends Activity {
 
 	private static XYMultipleSeriesDataset getBarDataset(Context cxt) {
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-		CategorySeries series = new CategorySeries("Pages/Date");
+		CategorySeries series = new CategorySeries("All technical books");
 
 		Cursor c = db.rawQuery("SELECT _id, mydate, mydata FROM mytable",
 				new String[] {});
