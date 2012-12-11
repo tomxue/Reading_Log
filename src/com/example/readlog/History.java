@@ -164,5 +164,4 @@ public class History extends Activity {
 			ssr.setDisplayChartValues(true);
 		}
 	}
-
 }

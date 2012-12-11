@@ -4,10 +4,10 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Readlog</string>
     <string name="Button_one">+1 page</string>
-    <string name="Button_zero">Backup</string>
+    <string name="Button_Backup">Backup</string>
     <string name="Button_History">Log</string>
     <string name="history_title">Books Read Log</string>
-    <string name="Button_Clear">Clear db</string>
+    <string name="Button_Restore">Restore</string>
     <string name="Button_About">About</string>
     <string name="Button_minus">-1 page</string>
     <string name="TextView_Content">Total: ? pages</string>

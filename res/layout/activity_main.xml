@@ -30,7 +30,7 @@
         android:layout_alignBottom="@+id/button3"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="8dp"
-        android:text="@string/Button_zero" />
+        android:text="@string/Button_Backup" />
 
     <Button
         android:id="@+id/button5"
@@ -57,7 +57,7 @@
         android:layout_alignBottom="@+id/button2"
         android:layout_marginLeft="8dp"
         android:layout_toRightOf="@+id/button2"
-        android:text="@string/Button_Clear" />
+        android:text="@string/Button_Restore" />
 
     <TextView
         android:id="@+id/textView1"
