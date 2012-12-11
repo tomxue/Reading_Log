@@ -23,18 +23,20 @@ import android.util.Log;
 import android.view.View;
 
 public class History extends Activity {
-	private static Map map = new TreeMap<String, Object>();  // TreeMap是有序的，充分利用之，by Tom Xue
+	private static Map map = new TreeMap<String, Object>(); // TreeMap是有序的，充分利用之，by
+															// Tom Xue
 	private static final String TAG = "tomxue";
 	private static SQLiteDatabase db;
 	private final String DBNAME = "readlog.db";
-	
+	private static int days = 8; // if set 8: recent 7 days tatistics
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        
-        // 打开或创建tompomodoros.db数据库
-     	db = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
-     	db.execSQL("CREATE TABLE if not exists mytable (_id INTEGER PRIMARY KEY AUTOINCREMENT, mydate VARCHAR, mydata SMALLINT)");
+
+		// 打开或创建tompomodoros.db数据库
+		db = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
+		db.execSQL("CREATE TABLE if not exists mytable (_id INTEGER PRIMARY KEY AUTOINCREMENT, mydate VARCHAR, mydata SMALLINT)");
 		XYMultipleSeriesRenderer renderer = getBarDemoRenderer();
 		setChartSettings(renderer);
 		// (1) during it map was filled, by Tom Xue
@@ -47,61 +49,60 @@ public class History extends Activity {
 			renderer.addXTextLabel(count, key_tmp.toString());
 			System.out.println("------map-------");
 			System.out.println(key_tmp.toString());
-			count++;  
+			count++;
 		}
 
 		// show the last 7 data/bars
-		if(count < 7){
+		if (count < days) {
 			renderer.setXAxisMin(0.5);
-			renderer.setXAxisMax(7.5);
-		}
-		else
-		{			
-			renderer.setXAxisMin(count-7+0.5);
-			renderer.setXAxisMax(count-7+7.5);	
+			renderer.setXAxisMax(days + 0.5);
+		} else {
+			renderer.setXAxisMin(count - days + 0.5);
+			renderer.setXAxisMax(count + 0.5);
 		}
 
 		View chart = ChartFactory.getBarChartView(this, getBarDataset2,
 				renderer, Type.DEFAULT);
 		setContentView(chart);
-		
+
 		db.close();
 	}
 
 	private static XYMultipleSeriesDataset getBarDataset(Context cxt) {
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-		CategorySeries series = new CategorySeries("Books Reading Log");
+		CategorySeries series = new CategorySeries("Pages/Date");
 
-		Cursor c = db.rawQuery("SELECT _id, mydate, mydata FROM mytable", new String[]{});  
-        while (c.moveToNext()) {
-            int _id = c.getInt(c.getColumnIndex("_id"));
-            String mydate = c.getString(c.getColumnIndex("mydate"));
-            int mydata = c.getInt(c.getColumnIndex("mydata"));
-            map.put(mydate, mydata);
-//          series.add(mydate, mydata);
-            Log.v(TAG, "while loop times");
-            System.out.println(_id);
-            System.out.println(mydate);
-            System.out.println(mydata);
-            System.out.println("---------------------");
-        }  
-        c.close();  	
-        
-        // map -> series, 有序化显示数据
-        // 如果用户随意修改手机日期，那么db中的数据就未必是按照日期排列的
-        // 为了按照日期显示结果，利用了有序的TreeMap
-        Iterator it = map.entrySet().iterator();
-        double value_tmp;
-        String key_tmp;
-        while (it.hasNext()) {
-        	              Map.Entry e = (Map.Entry) it.next();
-        	              System.out.println("Key: " + e.getKey() + "; Value: "
-        	                      + e.getValue());
-        	              key_tmp = (String)e.getKey();
-        	              value_tmp = Integer.parseInt((e.getValue().toString()));
-        	              series.add(key_tmp,value_tmp);
-        }
-		
+		Cursor c = db.rawQuery("SELECT _id, mydate, mydata FROM mytable",
+				new String[] {});
+		while (c.moveToNext()) {
+			int _id = c.getInt(c.getColumnIndex("_id"));
+			String mydate = c.getString(c.getColumnIndex("mydate"));
+			int mydata = c.getInt(c.getColumnIndex("mydata"));
+			map.put(mydate, mydata);
+			// series.add(mydate, mydata);
+			Log.v(TAG, "while loop times");
+			System.out.println(_id);
+			System.out.println(mydate);
+			System.out.println(mydata);
+			System.out.println("---------------------");
+		}
+		c.close();
+
+		// map -> series, 有序化显示数据
+		// 如果用户随意修改手机日期，那么db中的数据就未必是按照日期排列的
+		// 为了按照日期显示结果，利用了有序的TreeMap
+		Iterator it = map.entrySet().iterator();
+		double value_tmp;
+		String key_tmp;
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry) it.next();
+			System.out.println("Key: " + e.getKey() + "; Value: "
+					+ e.getValue());
+			key_tmp = (String) e.getKey();
+			value_tmp = Integer.parseInt((e.getValue().toString()));
+			series.add(key_tmp, value_tmp);
+		}
+
 		dataset.addSeries(series.toXYSeries());
 		return dataset;
 	}
@@ -120,15 +121,15 @@ public class History extends Activity {
 	}
 
 	private static void setChartSettings(XYMultipleSeriesRenderer renderer) {
-		renderer.setChartTitle("Recent 31 days");
+		renderer.setChartTitle("Recent 7 days");
 		renderer.setXTitle("Date");
 		renderer.setYTitle("Pages");
 		renderer.setYAxisMin(0);
 		renderer.setYAxisMax(31);
 		// set it by default
 		renderer.setXAxisMin(0.5);
-		renderer.setXAxisMax(7.5);
-		
+		renderer.setXAxisMax(days + 0.5); // show recent 7 days statistics
+
 		renderer.setShowLegend(true);
 		renderer.setShowLabels(true);
 		renderer.setXLabels(1);
@@ -148,10 +149,10 @@ public class History extends Activity {
 		renderer.setShowAxes(true);
 		// 设置条形图之间的距离
 		renderer.setBarSpacing(2.5);
-		
+
 		// by it, the x-axis number 0 10 20 30.. can be hiden
 		renderer.setXLabels(RESULT_OK);
-		
+
 		int length = renderer.getSeriesRendererCount();
 
 		for (int i = 0; i < length; i++) {

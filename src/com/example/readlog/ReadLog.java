@@ -58,7 +58,7 @@ public class ReadLog extends Activity {
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH) + 1;
 		int day = c.get(Calendar.DAY_OF_MONTH);
-		mydate_key = year + "-" + (month < 10 ? ("0" + month) : month) + "-"
+		mydate_key = year + "." + (month < 10 ? ("0" + month) : month) + "."
 				+ (day < 10 ? ("0" + day) : day);
 
 		button_one = (Button) findViewById(R.id.button1);
@@ -69,7 +69,7 @@ public class ReadLog extends Activity {
 		button_minus = (Button) findViewById(R.id.button6);
 		textNum = (TextView) findViewById(R.id.textView1);
 				
-		button_clear.setEnabled(false);
+		button_clear.setEnabled(true);
 		
 		// to show Total read pages with red color
 		// 每结束一个page，再操作db
@@ -80,21 +80,21 @@ public class ReadLog extends Activity {
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-
-				// 每结束一个page，再操作db
+				// (1) calculate the date stamp
+				Calendar c = Calendar.getInstance();
+				int year = c.get(Calendar.YEAR);
+				int month = c.get(Calendar.MONTH) + 1;
+				int day = c.get(Calendar.DAY_OF_MONTH);
+				mydate_key = year + "." + (month < 10 ? ("0" + month) : month)
+						+ "." + (day < 10 ? ("0" + day) : day);
+				
+				// (2) operate the db after one page
 				dbHandler(1);
 
 				// play the sound
 				startService(new Intent("com.example.readlog.MUSIC"));
 				// vibrate
-				vt.vibrate(1000);
-
-				Calendar c = Calendar.getInstance();
-				int year = c.get(Calendar.YEAR);
-				int month = c.get(Calendar.MONTH) + 1;
-				int day = c.get(Calendar.DAY_OF_MONTH);
-				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
-						+ "-" + (day < 10 ? ("0" + day) : day);
+				vt.vibrate(1000);				
 				
 				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");				
 				textNum.setTextColor(android.graphics.Color.RED);
@@ -104,6 +104,13 @@ public class ReadLog extends Activity {
 
 		button_zero.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
+				Calendar c = Calendar.getInstance();
+				int year = c.get(Calendar.YEAR);
+				int month = c.get(Calendar.MONTH) + 1;
+				int day = c.get(Calendar.DAY_OF_MONTH);
+				mydate_key = year + "." + (month < 10 ? ("0" + month) : month)
+						+ "." + (day < 10 ? ("0" + day) : day);
+				
 				// 每结束一个page，再操作db
 				dbHandler(0);
 
@@ -111,13 +118,6 @@ public class ReadLog extends Activity {
 				startService(new Intent("com.example.readlog.MUSIC"));
 				// vibrate
 				vt.vibrate(1000);
-
-				Calendar c = Calendar.getInstance();
-				int year = c.get(Calendar.YEAR);
-				int month = c.get(Calendar.MONTH) + 1;
-				int day = c.get(Calendar.DAY_OF_MONTH);
-				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
-						+ "-" + (day < 10 ? ("0" + day) : day);
 
 				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");		
 				textNum.setTextColor(android.graphics.Color.RED);
@@ -127,20 +127,21 @@ public class ReadLog extends Activity {
 
 		button_minus.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				// 每结束一个page，再操作db
+				// (1) calculate the date stamp
+				Calendar c = Calendar.getInstance();
+				int year = c.get(Calendar.YEAR);
+				int month = c.get(Calendar.MONTH) + 1;
+				int day = c.get(Calendar.DAY_OF_MONTH);
+				mydate_key = year + "." + (month < 10 ? ("0" + month) : month)
+						+ "." + (day < 10 ? ("0" + day) : day);
+				
+				// (2) operate the db after one page
 				dbHandler(-1);
 
 				// play the sound
 				startService(new Intent("com.example.readlog.MUSIC"));
 				// vibrate
 				vt.vibrate(1000);
-
-				Calendar c = Calendar.getInstance();
-				int year = c.get(Calendar.YEAR);
-				int month = c.get(Calendar.MONTH) + 1;
-				int day = c.get(Calendar.DAY_OF_MONTH);
-				mydate_key = year + "-" + (month < 10 ? ("0" + month) : month)
-						+ "-" + (day < 10 ? ("0" + day) : day);
 
 				textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");		
 				textNum.setTextColor(android.graphics.Color.RED);

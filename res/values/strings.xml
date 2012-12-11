@@ -6,7 +6,7 @@
     <string name="Button_one">+1 page</string>
     <string name="Button_zero">Backup</string>
     <string name="Button_History">Log</string>
-    <string name="history_title">Books reading log</string>
+    <string name="history_title">Books Read Log</string>
     <string name="Button_Clear">Clear db</string>
     <string name="Button_About">About</string>
     <string name="Button_minus">-1 page</string>
