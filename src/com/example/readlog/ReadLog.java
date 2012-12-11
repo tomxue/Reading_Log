@@ -105,7 +105,7 @@ public class ReadLog extends Activity {
 				// vibrate
 				vt.vibrate(1000);
 
-				textNum.setText("Total: " + Integer.toString(TotalNum)
+				textNum.setText("Read total " + Integer.toString(TotalNum)
 						+ " pages");
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
@@ -130,7 +130,7 @@ public class ReadLog extends Activity {
 				// vibrate
 				vt.vibrate(1000);
 
-				textNum.setText("Total: " + Integer.toString(TotalNum)
+				textNum.setText("Read total " + Integer.toString(TotalNum)
 						+ " pages");
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
