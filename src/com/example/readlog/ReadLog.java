@@ -70,6 +70,13 @@ public class ReadLog extends Activity {
 		textNum = (TextView) findViewById(R.id.textView1);
 				
 		button_clear.setEnabled(false);
+		
+		// to show Total read pages with red color
+		// 每结束一个page，再操作db
+		dbHandler(0);
+		textNum.setText("Total: " + Integer.toString(TotalNum) + " pages");		
+		textNum.setTextColor(android.graphics.Color.RED);
+		TotalNum = 0;
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
