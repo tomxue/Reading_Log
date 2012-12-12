@@ -14,20 +14,11 @@
         android:text="@string/Button_one" />
 
     <Button
-        android:id="@+id/button3"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="15dp"
-        android:text="@string/Button_History" />
-
-    <Button
         android:id="@+id/button2"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button3"
-        android:layout_alignBottom="@+id/button3"
+        android:layout_alignBaseline="@+id/seekBar1"
+        android:layout_alignBottom="@+id/seekBar1"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="8dp"
         android:text="@string/Button_Backup" />
@@ -45,7 +36,7 @@
         android:id="@+id/button6"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button3"
+        android:layout_above="@+id/seekBar1"
         android:layout_centerHorizontal="true"
         android:text="@string/Button_minus" />
 
@@ -68,10 +59,18 @@
         android:layout_marginTop="15dp"
         android:text="@string/TextView_Content" />
 
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button1"
+        android:layout_below="@+id/button1"
+        android:layout_marginTop="15dp" />
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView1"

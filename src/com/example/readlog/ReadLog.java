@@ -36,6 +36,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Gravity;
@@ -47,10 +49,11 @@ public class ReadLog extends Activity {
 	private final static String FROMPATH = "/data/data/com.example.readlog/databases/";
 	private final static String TOPATH = "/mnt/extSdCard/Tom/Readlog/";
 
-	private Button button_one, button_backup, button_todo, button_restore,
-			button_about, button_minus;
+	private Button button_one, button_backup, button_restore, button_about,
+			button_minus;
 	private TextView textNum;
 	private LinearLayout logLayout1;
+	private SeekBar scale;
 
 	protected static final int STOP = 0x10000;
 	protected static final int NEXT = 0x10001;
@@ -63,8 +66,11 @@ public class ReadLog extends Activity {
 	private static String BookNum;
 
 	private static Map map = new TreeMap<String, Object>(); // TreeMap是有序的，充分利用之，by
-	// Tom Xue
-	private static int days = 7 + 1; // if set 8: recent 7 days statistics
+
+	private static final int defaultDays = 7 + 1;
+	private static int days = defaultDays; // set 8 means recent 7 days
+											// statistics
+
 	public View chart;
 
 	@Override
@@ -94,15 +100,15 @@ public class ReadLog extends Activity {
 
 		button_one = (Button) findViewById(R.id.button1);
 		button_backup = (Button) findViewById(R.id.button2);
-		button_todo = (Button) findViewById(R.id.button3);
 		button_restore = (Button) findViewById(R.id.button4);
 		button_about = (Button) findViewById(R.id.button5);
 		button_minus = (Button) findViewById(R.id.button6);
 		textNum = (TextView) findViewById(R.id.textView1);
 		logLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
+		scale = (SeekBar) findViewById(R.id.seekBar1);
 
 		button_restore.setEnabled(true);
-		button_todo.setEnabled(false);
+		scale.setMax(120-days+1);	// to show last (4 months = 120 days) log data within one chart
 
 		// to show Total read pages marked with red color
 		// 每结束一个page，再操作db
@@ -132,7 +138,7 @@ public class ReadLog extends Activity {
 				// play the sound
 				startService(new Intent("com.example.readlog.MUSIC"));
 				// vibrate
-//				vt.vibrate(1000);
+				// vt.vibrate(1000);
 
 				textNum.setText("Read total " + Integer.toString(TotalNum)
 						+ " pages, today " + Integer.toString(TodayNum)
@@ -160,7 +166,7 @@ public class ReadLog extends Activity {
 				// play the sound
 				startService(new Intent("com.example.readlog.MUSIC"));
 				// vibrate
-//				vt.vibrate(1000);
+				// vt.vibrate(1000);
 
 				textNum.setText("Read total " + Integer.toString(TotalNum)
 						+ " pages, today " + Integer.toString(TodayNum)
@@ -171,7 +177,7 @@ public class ReadLog extends Activity {
 				onLogShow();
 			}
 		});
-
+			
 		button_backup.setOnClickListener(new Button.OnClickListener() {
 
 			@Override
@@ -197,9 +203,9 @@ public class ReadLog extends Activity {
 					Toast.makeText(ReadLog.this, "Restore failed!",
 							Toast.LENGTH_LONG).show();
 				}
-				
-				onLogShow();
-				
+
+				dummybutton_zero();
+
 				// Clear db
 				// try {
 				// db.close();
@@ -229,7 +235,56 @@ public class ReadLog extends Activity {
 				toast.show();
 			}
 		});
+
+		scale.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			// 复写OnSeeBarChangeListener的三个方法
+			// 第一个时OnStartTrackingTouch,在进度开始改变时执行
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+
+			// 第二个方法onProgressChanged是当进度发生改变时执行
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				days = seekBar.getProgress() + defaultDays;
+			}
+
+			// 第三个是onStopTrackingTouch,在停止拖动时执行
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				days = seekBar.getProgress() + defaultDays;
+				onLogShow();
+			}
+		});
 	}
+	
+	public void dummybutton_zero() {
+		// (1) calculate the date stamp
+		Calendar c = Calendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		mydate_key = year + "." + (month < 10 ? ("0" + month) : month)
+				+ "." + (day < 10 ? ("0" + day) : day);
+
+		// (2) operate the db after one page
+		dbHandler(0);
+
+		// play the sound
+		startService(new Intent("com.example.readlog.MUSIC"));
+		// vibrate
+		// vt.vibrate(1000);
+
+		textNum.setText("Read total " + Integer.toString(TotalNum)
+				+ " pages, today " + Integer.toString(TodayNum)
+				+ " pages, total " + BookNum + " books");
+		textNum.setTextColor(android.graphics.Color.RED);
+		TotalNum = 0;
+
+		onLogShow();
+	}
+
 
 	public void onLogShow() {
 		// Switch to log page/activity
@@ -267,12 +322,12 @@ public class ReadLog extends Activity {
 		chart = ChartFactory.getBarChartView(this, getBarDataset2, renderer,
 				Type.DEFAULT);
 		// setContentView(chart);
-		
+
 		// refresh the View chart
 		logLayout1.addView(chart);
 		logLayout1.removeAllViewsInLayout();
 		logLayout1.addView(chart);
-		
+
 		db.close();
 	}
 
@@ -471,7 +526,7 @@ public class ReadLog extends Activity {
 	}
 
 	private static void setChartSettings(XYMultipleSeriesRenderer renderer) {
-		renderer.setChartTitle("Recent 7 days");
+		renderer.setChartTitle("Recent " + Integer.toString(days-1) + " days");
 		renderer.setXTitle("Date");
 		renderer.setYTitle("Pages");
 		renderer.setYAxisMin(0);
