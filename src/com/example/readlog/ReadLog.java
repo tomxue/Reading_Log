@@ -47,7 +47,7 @@ public class ReadLog extends Activity {
 	private final static String FROMPATH = "/data/data/com.example.readlog/databases/";
 	private final static String TOPATH = "/mnt/extSdCard/Tom/Readlog/";
 
-	private Button button_one, button_backup, button_history, button_restore,
+	private Button button_one, button_backup, button_todo, button_restore,
 			button_about, button_minus;
 	private TextView textNum;
 	private LinearLayout logLayout1;
@@ -94,7 +94,7 @@ public class ReadLog extends Activity {
 
 		button_one = (Button) findViewById(R.id.button1);
 		button_backup = (Button) findViewById(R.id.button2);
-		button_history = (Button) findViewById(R.id.button3);
+		button_todo = (Button) findViewById(R.id.button3);
 		button_restore = (Button) findViewById(R.id.button4);
 		button_about = (Button) findViewById(R.id.button5);
 		button_minus = (Button) findViewById(R.id.button6);
@@ -102,17 +102,18 @@ public class ReadLog extends Activity {
 		logLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
 
 		button_restore.setEnabled(true);
-		button_history.setEnabled(false);
+		button_todo.setEnabled(false);
 
 		// to show Total read pages marked with red color
 		// 每结束一个page，再操作db
+		// to initialize today's log data
 		dbHandler(0);
 		textNum.setText("Read total " + Integer.toString(TotalNum)
 				+ " pages, today " + Integer.toString(TodayNum)
 				+ " pages, total " + BookNum + " books");
 		textNum.setTextColor(android.graphics.Color.RED);
 		TotalNum = 0;
-		
+
 		onLogShow();
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
@@ -138,7 +139,7 @@ public class ReadLog extends Activity {
 						+ " pages, total " + BookNum + " books");
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
-				
+
 				onLogShow();
 			}
 		});
@@ -166,7 +167,7 @@ public class ReadLog extends Activity {
 						+ " pages, total " + BookNum + " books");
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
-				
+
 				onLogShow();
 			}
 		});
@@ -229,7 +230,7 @@ public class ReadLog extends Activity {
 	}
 
 	public void onLogShow() {
-		// Switch to log page
+		// Switch to log page/activity
 		// Intent intent = new Intent();
 		// intent.setClass(ReadLog.this, History.class);
 		// startActivity(intent);
@@ -264,9 +265,12 @@ public class ReadLog extends Activity {
 		chart = ChartFactory.getBarChartView(this, getBarDataset2, renderer,
 				Type.DEFAULT);
 		// setContentView(chart);
+		
+		// refresh the View chart
 		logLayout1.addView(chart);
 		logLayout1.removeAllViewsInLayout();
 		logLayout1.addView(chart);
+		
 		db.close();
 	}
 
@@ -341,12 +345,6 @@ public class ReadLog extends Activity {
 		db.close();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
-
 	public int copy(String fromFile, String toFile) {
 		// 要复制的文件目录
 		File[] currentFiles;
@@ -417,6 +415,7 @@ public class ReadLog extends Activity {
 		Log.v(TAG, "onStop");
 	}
 
+	// achartengine related functions below
 	private static XYMultipleSeriesDataset getBarDataset(Context cxt) {
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 		CategorySeries series = new CategorySeries("All technical books");
@@ -512,5 +511,11 @@ public class ReadLog extends Activity {
 			ssr.setChartValuesTextSize(16);
 			ssr.setDisplayChartValues(true);
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		return true;
 	}
 }
