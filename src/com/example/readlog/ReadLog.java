@@ -7,6 +7,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.achartengine.ChartFactory;
+import org.achartengine.chart.BarChart.Type;
+import org.achartengine.model.CategorySeries;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.renderer.SimpleSeriesRenderer;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
+
 import com.example.readlog.R;
 import android.os.Bundle;
 import android.app.Activity;
@@ -16,11 +28,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Paint.Align;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Gravity;
@@ -34,8 +49,8 @@ public class ReadLog extends Activity {
 
 	private Button button_one, button_backup, button_history, button_restore,
 			button_about, button_minus;
-
 	private TextView textNum;
+	private LinearLayout logLayout1;
 
 	protected static final int STOP = 0x10000;
 	protected static final int NEXT = 0x10001;
@@ -46,6 +61,11 @@ public class ReadLog extends Activity {
 	private static Vibrator vt;
 	private static int TotalNum, TodayNum, BookPages = 300;
 	private static String BookNum;
+
+	private static Map map = new TreeMap<String, Object>(); // TreeMap是有序的，充分利用之，by
+	// Tom Xue
+	private static int days = 7 + 1; // if set 8: recent 7 days statistics
+	public View chart;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,17 +99,21 @@ public class ReadLog extends Activity {
 		button_about = (Button) findViewById(R.id.button5);
 		button_minus = (Button) findViewById(R.id.button6);
 		textNum = (TextView) findViewById(R.id.textView1);
+		logLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
 
 		button_restore.setEnabled(true);
+		button_history.setEnabled(false);
 
 		// to show Total read pages marked with red color
 		// 每结束一个page，再操作db
 		dbHandler(0);
 		textNum.setText("Read total " + Integer.toString(TotalNum)
-				+ " pages, today " + Integer.toString(TodayNum) + " pages, total "
-				+ BookNum + " books");
+				+ " pages, today " + Integer.toString(TodayNum)
+				+ " pages, total " + BookNum + " books");
 		textNum.setTextColor(android.graphics.Color.RED);
 		TotalNum = 0;
+		
+		onLogShow();
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
@@ -110,10 +134,12 @@ public class ReadLog extends Activity {
 				vt.vibrate(1000);
 
 				textNum.setText("Read total " + Integer.toString(TotalNum)
-						+ " pages, today " + Integer.toString(TodayNum) + " pages, total "
-						+ BookNum + " books");
+						+ " pages, today " + Integer.toString(TodayNum)
+						+ " pages, total " + BookNum + " books");
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
+				
+				onLogShow();
 			}
 		});
 
@@ -136,10 +162,12 @@ public class ReadLog extends Activity {
 				vt.vibrate(1000);
 
 				textNum.setText("Read total " + Integer.toString(TotalNum)
-						+ " pages, today " + Integer.toString(TodayNum) + " pages, total "
-						+ BookNum + " books");
+						+ " pages, today " + Integer.toString(TodayNum)
+						+ " pages, total " + BookNum + " books");
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
+				
+				onLogShow();
 			}
 		});
 
@@ -186,15 +214,6 @@ public class ReadLog extends Activity {
 			}
 		});
 
-		button_history.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				// Switch to report page
-				Intent intent = new Intent();
-				intent.setClass(ReadLog.this, History.class);
-				startActivity(intent);
-			}
-		});
-
 		button_about.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				Toast toast;
@@ -209,9 +228,51 @@ public class ReadLog extends Activity {
 		});
 	}
 
+	public void onLogShow() {
+		// Switch to log page
+		// Intent intent = new Intent();
+		// intent.setClass(ReadLog.this, History.class);
+		// startActivity(intent);
+
+		// 打开或创建tompomodoros.db数据库
+		db = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
+		db.execSQL("CREATE TABLE if not exists mytable (_id INTEGER PRIMARY KEY AUTOINCREMENT, mydate VARCHAR, mydata SMALLINT)");
+		XYMultipleSeriesRenderer renderer = getBarDemoRenderer();
+		setChartSettings(renderer);
+		// (1) during it map was filled, by Tom Xue
+		XYMultipleSeriesDataset getBarDataset2 = getBarDataset(this);
+
+		int count = 1;
+		// 这里比较重要，这里手动给X轴填刻度。有多少条内容，你就要添多少个刻度，这样X轴就显示的是时间，也能显示出长方形图
+		// (2) then map is further rendered, by Tom Xue
+		for (Object key_tmp : map.keySet()) {
+			renderer.addXTextLabel(count, key_tmp.toString());
+			System.out.println("------map-------");
+			System.out.println(key_tmp.toString());
+			count++;
+		}
+
+		// show the last 7 data/bars
+		if (count < days) {
+			renderer.setXAxisMin(0.5);
+			renderer.setXAxisMax(days + 0.5);
+		} else {
+			renderer.setXAxisMin(count - days + 0.5);
+			renderer.setXAxisMax(count + 0.5);
+		}
+
+		chart = ChartFactory.getBarChartView(this, getBarDataset2, renderer,
+				Type.DEFAULT);
+		// setContentView(chart);
+		logLayout1.addView(chart);
+		logLayout1.removeAllViewsInLayout();
+		logLayout1.addView(chart);
+		db.close();
+	}
+
 	private void dbHandler(int pages) {
-		DecimalFormat df = new DecimalFormat("0.000"); 
-		
+		DecimalFormat df = new DecimalFormat("0.000");
+
 		// 打开或创建tompomodoros.db数据库
 		db = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
 		// 创建mytable表
@@ -254,7 +315,7 @@ public class ReadLog extends Activity {
 				TodayNum = 0;
 			}
 		}
-		BookNum = df.format((float)TotalNum/BookPages);
+		BookNum = df.format((float) TotalNum / BookPages);
 
 		c.close();
 
@@ -273,8 +334,8 @@ public class ReadLog extends Activity {
 				cv.put("mydata", 0);
 			// 插入ContentValues中的数据
 			db.insert("mytable", null, cv);
-			
-			BookNum = df.format((float)TotalNum/BookPages);
+
+			BookNum = df.format((float) TotalNum / BookPages);
 		}
 
 		db.close();
@@ -354,5 +415,102 @@ public class ReadLog extends Activity {
 		// if (mWakeLock.isHeld())
 		// mWakeLock.release();
 		Log.v(TAG, "onStop");
+	}
+
+	private static XYMultipleSeriesDataset getBarDataset(Context cxt) {
+		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+		CategorySeries series = new CategorySeries("All technical books");
+
+		Cursor c = db.rawQuery("SELECT _id, mydate, mydata FROM mytable",
+				new String[] {});
+		while (c.moveToNext()) {
+			int _id = c.getInt(c.getColumnIndex("_id"));
+			String mydate = c.getString(c.getColumnIndex("mydate"));
+			int mydata = c.getInt(c.getColumnIndex("mydata"));
+			map.put(mydate, mydata);
+			// series.add(mydate, mydata);
+			Log.v(TAG, "while loop times");
+			System.out.println(_id);
+			System.out.println(mydate);
+			System.out.println(mydata);
+			System.out.println("---------------------");
+		}
+		c.close();
+
+		// map -> series, 有序化显示数据
+		// 如果用户随意修改手机日期，那么db中的数据就未必是按照日期排列的
+		// 为了按照日期显示结果，利用了有序的TreeMap
+		Iterator it = map.entrySet().iterator();
+		double value_tmp;
+		String key_tmp;
+		while (it.hasNext()) {
+			Map.Entry e = (Map.Entry) it.next();
+			System.out.println("Key: " + e.getKey() + "; Value: "
+					+ e.getValue());
+			key_tmp = (String) e.getKey();
+			value_tmp = Integer.parseInt((e.getValue().toString()));
+			series.add(key_tmp, value_tmp);
+		}
+
+		dataset.addSeries(series.toXYSeries());
+		return dataset;
+	}
+
+	private static XYMultipleSeriesRenderer getBarDemoRenderer() {
+		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
+		renderer.setAxisTitleTextSize(16);
+		renderer.setChartTitleTextSize(16);
+		renderer.setLabelsTextSize(16);
+		renderer.setLegendTextSize(16);
+		renderer.setMargins(new int[] { 20, 30, 15, 0 });
+		XYSeriesRenderer r = new XYSeriesRenderer();
+		r.setColor(Color.BLUE);
+		renderer.addSeriesRenderer(r);
+		return renderer;
+	}
+
+	private static void setChartSettings(XYMultipleSeriesRenderer renderer) {
+		renderer.setChartTitle("Recent 7 days");
+		renderer.setXTitle("Date");
+		renderer.setYTitle("Pages");
+		renderer.setYAxisMin(0);
+		renderer.setYAxisMax(31);
+		// set it by default
+		renderer.setXAxisMin(0.5);
+		renderer.setXAxisMax(days + 0.5); // show recent 7 days statistics
+
+		renderer.setShowLegend(true);
+		renderer.setShowLabels(true);
+		renderer.setXLabels(1);
+		renderer.setBackgroundColor(Color.WHITE);
+		// 设置页边空白的颜色
+		renderer.setMarginsColor(Color.GRAY);
+		// 设置x,y轴显示的排列
+		renderer.setXLabelsAlign(Align.CENTER);
+		renderer.setYLabelsAlign(Align.RIGHT);
+		// 设置坐标轴,轴的颜色
+		renderer.setAxesColor(Color.RED);
+		// 显示网格
+		renderer.setShowGrid(true);
+		// 设置x,y轴上的刻度的颜色
+		renderer.setLabelsColor(Color.GREEN);
+		// 设置是否显示,坐标轴的轴,默认为 true
+		renderer.setShowAxes(true);
+		// 设置条形图之间的距离
+		renderer.setBarSpacing(2.5);
+
+		// by it, the x-axis number 0 10 20 30.. can be hiden
+		renderer.setXLabels(RESULT_OK);
+
+		int length = renderer.getSeriesRendererCount();
+
+		for (int i = 0; i < length; i++) {
+			SimpleSeriesRenderer ssr = renderer.getSeriesRendererAt(i);
+			// 不知道作者的居中是怎么计算的,默认是Align.CENTER,但是对于两个以上的条形显示
+			// 就画在了最右边
+			ssr.setChartValuesTextAlign(Align.RIGHT);
+			ssr.setChartValuesTextSize(16);
+			ssr.setDisplayChartValues(true);
+		}
 	}
 }
