@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import com.example.readlog.R;
 import android.os.Bundle;
@@ -43,7 +44,8 @@ public class ReadLog extends Activity {
 	private final String DBNAME = "readlog.db";
 	private static SQLiteDatabase db;
 	private static Vibrator vt;
-	private static int TotalNum;
+	private static int TotalNum, TodayNum, BookPages = 300;
+	private static String BookNum;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +85,9 @@ public class ReadLog extends Activity {
 		// to show Total read pages marked with red color
 		// 每结束一个page，再操作db
 		dbHandler(0);
-		textNum.setText("Read total " + Integer.toString(TotalNum) + " pages");
+		textNum.setText("Read total " + Integer.toString(TotalNum)
+				+ " pages, today " + Integer.toString(TodayNum) + " pages, total "
+				+ BookNum + " books");
 		textNum.setTextColor(android.graphics.Color.RED);
 		TotalNum = 0;
 
@@ -106,7 +110,8 @@ public class ReadLog extends Activity {
 				vt.vibrate(1000);
 
 				textNum.setText("Read total " + Integer.toString(TotalNum)
-						+ " pages");
+						+ " pages, today " + Integer.toString(TodayNum) + " pages, total "
+						+ BookNum + " books");
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
 			}
@@ -131,7 +136,8 @@ public class ReadLog extends Activity {
 				vt.vibrate(1000);
 
 				textNum.setText("Read total " + Integer.toString(TotalNum)
-						+ " pages");
+						+ " pages, today " + Integer.toString(TodayNum) + " pages, total "
+						+ BookNum + " books");
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
 			}
@@ -204,6 +210,8 @@ public class ReadLog extends Activity {
 	}
 
 	private void dbHandler(int pages) {
+		DecimalFormat df = new DecimalFormat("0.000"); 
+		
 		// 打开或创建tompomodoros.db数据库
 		db = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
 		// 创建mytable表
@@ -223,13 +231,16 @@ public class ReadLog extends Activity {
 				if (pages == 1) {
 					cv.put("mydata", 1 + mydata_dbitem);
 					TotalNum = TotalNum + 1 + mydata_dbitem;
+					TodayNum = 1 + mydata_dbitem;
 				} else if (pages == 0) {
 					cv.put("mydata", 0 + mydata_dbitem);
 					TotalNum = TotalNum + 0 + mydata_dbitem;
+					TodayNum = 0 + mydata_dbitem;
 				} else if (pages == -1) {
 					if (mydata_dbitem > 0) {
 						cv.put("mydata", -1 + mydata_dbitem);
 						TotalNum = TotalNum - 1 + mydata_dbitem;
+						TodayNum = -1 + mydata_dbitem;
 					} else
 						cv.put("mydata", 0);
 				}
@@ -240,8 +251,10 @@ public class ReadLog extends Activity {
 			} else { // 如果在数据库中遇到非当日日期，则只更新TotalNum
 				mydata_dbitem = c.getInt(c.getColumnIndex("mydata"));
 				TotalNum = TotalNum + mydata_dbitem;
+				TodayNum = 0;
 			}
 		}
+		BookNum = df.format((float)TotalNum/BookPages);
 
 		c.close();
 
@@ -253,12 +266,15 @@ public class ReadLog extends Activity {
 			if (pages == 1) {
 				cv.put("mydata", 1);
 				TotalNum = TotalNum + 1;
+				TodayNum = TodayNum + 1;
 			} else if (pages == 0)
 				cv.put("mydata", 0);
 			else if (pages == -1)
 				cv.put("mydata", 0);
 			// 插入ContentValues中的数据
 			db.insert("mytable", null, cv);
+			
+			BookNum = df.format((float)TotalNum/BookPages);
 		}
 
 		db.close();
