@@ -132,7 +132,7 @@ public class ReadLog extends Activity {
 				// play the sound
 				startService(new Intent("com.example.readlog.MUSIC"));
 				// vibrate
-				vt.vibrate(1000);
+//				vt.vibrate(1000);
 
 				textNum.setText("Read total " + Integer.toString(TotalNum)
 						+ " pages, today " + Integer.toString(TodayNum)
@@ -160,7 +160,7 @@ public class ReadLog extends Activity {
 				// play the sound
 				startService(new Intent("com.example.readlog.MUSIC"));
 				// vibrate
-				vt.vibrate(1000);
+//				vt.vibrate(1000);
 
 				textNum.setText("Read total " + Integer.toString(TotalNum)
 						+ " pages, today " + Integer.toString(TodayNum)
