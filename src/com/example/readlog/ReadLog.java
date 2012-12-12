@@ -197,7 +197,9 @@ public class ReadLog extends Activity {
 					Toast.makeText(ReadLog.this, "Restore failed!",
 							Toast.LENGTH_LONG).show();
 				}
-
+				
+				onLogShow();
+				
 				// Clear db
 				// try {
 				// db.close();
