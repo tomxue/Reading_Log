@@ -62,7 +62,7 @@ public class ReadLog extends Activity {
 	private final String DBNAME = "readlog.db";
 	private static SQLiteDatabase db;
 	private static Vibrator vt;
-	private static int TotalNum, TodayNum, BookPages = 300;
+	private static int TotalNum, TodayNum, BookPages = 300;  // default value, 300 pages/book
 	private static String BookNum;
 
 	private static Map map = new TreeMap<String, Object>(); // TreeMap是有序的，充分利用之，by
@@ -184,10 +184,10 @@ public class ReadLog extends Activity {
 			public void onClick(View v) {
 				if (copy(FROMPATH, TOPATH) == 0) {
 					Toast.makeText(ReadLog.this, "Backup succeed!",
-							Toast.LENGTH_LONG).show();
+							Toast.LENGTH_SHORT).show();
 				} else {
 					Toast.makeText(ReadLog.this, "Backup failed!",
-							Toast.LENGTH_LONG).show();
+							Toast.LENGTH_SHORT).show();
 				}
 
 			}
@@ -198,10 +198,10 @@ public class ReadLog extends Activity {
 
 				if (copy(TOPATH, FROMPATH) == 0) {
 					Toast.makeText(ReadLog.this, "Restore succeed!",
-							Toast.LENGTH_LONG).show();
+							Toast.LENGTH_SHORT).show();
 				} else {
 					Toast.makeText(ReadLog.this, "Restore failed!",
-							Toast.LENGTH_LONG).show();
+							Toast.LENGTH_SHORT).show();
 				}
 
 				dummybutton_zero();
