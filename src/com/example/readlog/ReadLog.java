@@ -248,6 +248,7 @@ public class ReadLog extends Activity {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				days = seekBar.getProgress() + defaultDays;
+				onLogShow();
 			}
 
 			// 第三个是onStopTrackingTouch,在停止拖动时执行
