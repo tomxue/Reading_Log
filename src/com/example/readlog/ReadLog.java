@@ -476,7 +476,7 @@ public class ReadLog extends Activity {
 	// achartengine related functions below
 	private static XYMultipleSeriesDataset getBarDataset(Context cxt) {
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-		CategorySeries series = new CategorySeries("All technical books");
+		CategorySeries series = new CategorySeries("All technical books\nStanding on the shoulders of giants");
 
 		Cursor c = db.rawQuery("SELECT _id, mydate, mydata FROM mytable",
 				new String[] {});
