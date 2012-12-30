@@ -108,7 +108,7 @@ public class ReadLog extends Activity {
 		scale = (SeekBar) findViewById(R.id.seekBar1);
 
 		button_restore.setEnabled(true);
-		scale.setMax(120-days+1);	// to show last (4 months = 120 days) log data within one chart
+		scale.setMax(365-days+1);	// to show last (4 months = 120 days) log data within one chart
 
 		// to show Total read pages marked with red color
 		// 每结束一个page，再操作db
