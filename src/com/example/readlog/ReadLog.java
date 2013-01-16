@@ -23,6 +23,7 @@ import com.example.readlog.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -62,7 +63,8 @@ public class ReadLog extends Activity {
 	private final String DBNAME = "readlog.db";
 	private static SQLiteDatabase db;
 	private static Vibrator vt;
-	private static int TotalNum, TodayNum, BookPages = 300;  // default value, 300 pages/book
+	private static int TotalNum, TodayNum, BookPages = 300; // default value,
+															// 300 pages/book
 	private static String BookNum;
 
 	private static Map map = new TreeMap<String, Object>(); // TreeMap是有序的，充分利用之，by
@@ -108,7 +110,8 @@ public class ReadLog extends Activity {
 		scale = (SeekBar) findViewById(R.id.seekBar1);
 
 		button_restore.setEnabled(true);
-		scale.setMax(365-days+1);	// to show last (4 months = 120 days) log data within one chart
+		scale.setMax(365 - days + 1); // to show last (4 months = 120 days) log
+										// data within one chart
 
 		// to show Total read pages marked with red color
 		// 每结束一个page，再操作db
@@ -177,7 +180,7 @@ public class ReadLog extends Activity {
 				onLogShow();
 			}
 		});
-			
+
 		button_backup.setOnClickListener(new Button.OnClickListener() {
 
 			@Override
@@ -189,7 +192,7 @@ public class ReadLog extends Activity {
 					Toast.makeText(ReadLog.this, "Backup failed!",
 							Toast.LENGTH_SHORT).show();
 				}
-				
+
 				dummybutton_zero();
 			}
 		});
@@ -260,15 +263,15 @@ public class ReadLog extends Activity {
 			}
 		});
 	}
-	
+
 	public void dummybutton_zero() {
 		// (1) calculate the date stamp
 		Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH) + 1;
 		int day = c.get(Calendar.DAY_OF_MONTH);
-		mydate_key = year + "." + (month < 10 ? ("0" + month) : month)
-				+ "." + (day < 10 ? ("0" + day) : day);
+		mydate_key = year + "." + (month < 10 ? ("0" + month) : month) + "."
+				+ (day < 10 ? ("0" + day) : day);
 
 		// (2) operate the db after one page
 		dbHandler(0);
@@ -286,7 +289,6 @@ public class ReadLog extends Activity {
 
 		onLogShow();
 	}
-
 
 	public void onLogShow() {
 		// Switch to log page/activity
@@ -528,7 +530,7 @@ public class ReadLog extends Activity {
 	}
 
 	private static void setChartSettings(XYMultipleSeriesRenderer renderer) {
-		renderer.setChartTitle("Recent " + Integer.toString(days-1) + " days");
+		renderer.setChartTitle("Recent " + Integer.toString(days - 1) + " days");
 		renderer.setXTitle("Date");
 		renderer.setYTitle("Pages");
 		renderer.setYAxisMin(0);
