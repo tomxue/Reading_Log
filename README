@@ -1,2 +1,6 @@
 TODO
-    to add scale adjustment of show data volume
+    add gesture operation, which may be based on:
+        sensor data
+        touch action
+    add map location
+    fix the bug os MusicService
