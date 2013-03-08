@@ -71,5 +71,13 @@
         android:layout_below="@+id/textView1"
         android:layout_marginTop="15dp" >
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button5"
+        android:layout_toRightOf="@+id/button6"
+        android:text="@string/Button_Close" />
 
 </RelativeLayout>

@@ -10,6 +10,7 @@
     <string name="Button_Restore">Restore</string>
     <string name="Button_About">About</string>
     <string name="Button_minus">-1</string>
+    <string name="Button_Close">Close</string>
     <string name="TextView_Content">Total: ? pages</string>
 
 </resources>

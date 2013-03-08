@@ -22,6 +22,8 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import com.example.readlog.R;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
@@ -46,12 +48,14 @@ import android.os.Vibrator;
 
 public class ReadLog extends Activity {
 
+	public final String MYACTION = "android.intent.action.STARTMYAPtom";
+
 	private static final String TAG = "TomXue";
 	private final static String FROMPATH = "/data/data/com.example.readlog/databases/";
 	private final static String TOPATH = "/mnt/extSdCard/Tom/Readlog/";
 
 	private Button button_one, button_backup, button_restore, button_about,
-			button_minus;
+			button_minus, button_close;
 	private TextView textNum;
 	private LinearLayout logLayout1;
 	private SeekBar scale;
@@ -105,6 +109,7 @@ public class ReadLog extends Activity {
 		button_restore = (Button) findViewById(R.id.button4);
 		button_about = (Button) findViewById(R.id.button5);
 		button_minus = (Button) findViewById(R.id.button6);
+		button_close = (Button) findViewById(R.id.button7);
 		textNum = (TextView) findViewById(R.id.textView1);
 		logLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
 		scale = (SeekBar) findViewById(R.id.seekBar1);
@@ -124,6 +129,21 @@ public class ReadLog extends Activity {
 		TotalNum = 0;
 
 		onLogShow();
+
+		button_close.setOnClickListener(new Button.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				ReadLog.this.finish();
+			}
+		});
+		AlarmManager am = (AlarmManager) this
+				.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(MYACTION);
+		PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, 1);
+		// 1000 - 1√Î÷”“‘∫Û∆Ù∂Ø
+		am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000*60*60*10,
+				pi);
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {

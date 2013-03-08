@@ -31,6 +31,12 @@
             android:label="@string/history_title" >
         </activity>
 
+        <receiver android:name="AlarmReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.STARTMYAPtom" />
+            </intent-filter>
+        </receiver>
+
         <service android:name=".MusicService" >
             <intent-filter>
                 <action android:name="com.example.readlog.MUSIC" />
