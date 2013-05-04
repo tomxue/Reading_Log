@@ -50,9 +50,9 @@ public class ReadLog extends Activity {
 
 	public final String MYACTION = "android.intent.action.STARTMYAPtom";
 
-	private static final String TAG = "TomXue";
+	private static final String TAG = "readlog1";
 	private final static String FROMPATH = "/data/data/com.example.readlog/databases/";
-	private final static String TOPATH = "/mnt/extSdCard/Tom/Readlog/";
+	private final static String TOPATH = "/mnt/extSdCard/Readlog/";
 
 	private Button button_one, button_backup, button_restore, button_about,
 			button_minus, button_close;
@@ -139,11 +139,11 @@ public class ReadLog extends Activity {
 		});
 		AlarmManager am = (AlarmManager) this
 				.getSystemService(Context.ALARM_SERVICE);
-		Intent intent = new Intent(MYACTION);
-		PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, 1);
+//		Intent intent = new Intent(MYACTION);
+//		PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, 1);
 		// 1000 - 1√Î÷”“‘∫Û∆Ù∂Ø
-		am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000*60*60*10,
-				pi);
+//		am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000*60*60*10,
+//				pi);
 
 		button_one.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
@@ -252,8 +252,7 @@ public class ReadLog extends Activity {
 				Toast toast;
 				toast = Toast.makeText(getApplicationContext(),
 						"Author: Tom Xue" + "\n"
-								+ "Email: tomxue0126@gmail.com" + "\n"
-								+ "https://github.com/tomxue/Reading_Log.git",
+								+ "Email: tomxue0126@gmail.com" + "\n",
 						Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.BOTTOM, 0, 0);
 				toast.show();

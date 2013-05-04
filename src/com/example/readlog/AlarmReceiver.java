@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 public class AlarmReceiver extends BroadcastReceiver {
-	public final String MYTAG = "tomxue";
+	public final String MYTAG = "readlog2";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
