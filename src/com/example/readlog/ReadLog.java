@@ -72,20 +72,20 @@ public class ReadLog extends Activity {
 	private static Map map = new TreeMap<String, Object>(); // TreeMap是有序的，充分利用之，by
 
 	private static final int defaultDays = 7 + 1;
-	private static int days = defaultDays; // set 8 means recent 7 days
+	private static int days = defaultDays; 	// set 8 means recent 7 days
 											// statistics
 	public View chart;
 	
-	final String Backup_succeed = getResources().getString(R.string.Backup_succeed);
-	final String Backup_fail = getResources().getString(R.string.Backup_fail);
-	final String Restore_succeed = getResources().getString(R.string.Restore_succeed);
-	final String Restore_fail = getResources().getString(R.string.Restore_fail);
-	final String Read_total = getResources().getString(R.string.Read_total);
-	final String Pages_today = getResources().getString(R.string.Pages_today);
-	final String Pages_total = getResources().getString(R.string.Pages_total);
-	final String Books = getResources().getString(R.string.Books);
-	final String Email = getResources().getString(R.string.Email);
-	final String Author = getResources().getString(R.string.Author);
+	String Backup_succeed;
+	String Backup_fail;
+	String Restore_succeed;
+	String Restore_fail;
+	String Read_total;
+	String Pages_today;
+	String Pages_total;
+	String Books;
+	String myEmail;
+	String Author;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -121,6 +121,17 @@ public class ReadLog extends Activity {
 		textNum = (TextView) findViewById(R.id.textView1);
 		logLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
 		scale = (SeekBar) findViewById(R.id.seekBar1);
+		
+		Backup_succeed = getResources().getString(R.string.Backup_succeed);
+		Backup_fail = getResources().getString(R.string.Backup_fail);
+		Restore_succeed = getResources().getString(R.string.Restore_succeed);
+		Restore_fail = getResources().getString(R.string.Restore_fail);
+		Read_total = getResources().getString(R.string.Read_total);
+		Pages_today = getResources().getString(R.string.Pages_today);
+		Pages_total = getResources().getString(R.string.Pages_total);
+		Books = getResources().getString(R.string.Books);
+		myEmail = getResources().getString(R.string.Email);
+		Author = getResources().getString(R.string.Author);
 		
 		button_restore.setEnabled(true);
 		scale.setMax(365 - days + 1); 	// to show last (4 months = 120 days) log
@@ -260,7 +271,7 @@ public class ReadLog extends Activity {
 				Toast toast;
 				toast = Toast.makeText(getApplicationContext(),
 						Author + "Tom Xue" + "\n"
-								+ Email + "tomxue0126@gmail.com" + "\n",
+								+ myEmail + "tomxue0126@gmail.com" + "\n",
 						Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.BOTTOM, 0, 0);
 				toast.show();
