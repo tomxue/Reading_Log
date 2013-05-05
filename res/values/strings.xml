@@ -16,5 +16,11 @@
     <string name="Backup_fail">Backup fail!</string>
     <string name="Restore_succeed">Restore succeed!</string>
     <string name="Restore_fail">Restore fail!</string>
+    <string name="Read_total">Read total</string>
+    <string name="Pages_today"> pages, today</string>
+    <string name="Pages_total"> pages, total</string>
+    <string name="Books"> books</string>
+    <string name="Email">Email: </string>
+    <string name="Author">Author: </string>
 
 </resources>
