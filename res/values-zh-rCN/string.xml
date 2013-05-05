@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">读书日志</string>
+    <string name="menu_settings">设置</string>
+    <string name="title_activity_main">读书日志</string>
+    <string name="Button_one">+1</string>
+    <string name="Button_Backup">备份</string>
+    <string name="Button_History">待实现</string>
+    <string name="history_title">读书日志</string>
+    <string name="Button_Restore">恢复</string>
+    <string name="Button_About">关于</string>
+    <string name="Button_minus">-1</string>
+    <string name="Button_Close">退出</string>
+    <string name="TextView_Content">阅读总页数：</string>
+    <string name="Backup_succeed">备份成功！</string>
+    <string name="Backup_fail">备份失败！</string>
+    <string name="Restore_succeed">恢复成功！</string>
+    <string name="Restore_fail">恢复失败！</string>
+    <string name="Read_total">已读总计</string>
+    <string name="Pages_today"> 页, 今天 </string>
+    <string name="Pages_total"> 页, 总计 </string>
+    <string name="Books"> 本书</string>
+    <string name="Email">电子邮件: </string>
+    <string name="Author">作者: </string>
+
+</resources>

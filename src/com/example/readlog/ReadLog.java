@@ -23,9 +23,7 @@ import com.example.readlog.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -48,7 +46,7 @@ import android.os.Vibrator;
 
 public class ReadLog extends Activity {
 
-	public final String MYACTION = "android.intent.action.STARTMYAPtom";
+	public final String MYACTION = "android.intent.action.STARTMYAP_readlog";
 
 	private static final String TAG = "readlog1";
 	private final static String FROMPATH = "/data/data/com.example.readlog/databases/";
@@ -76,8 +74,18 @@ public class ReadLog extends Activity {
 	private static final int defaultDays = 7 + 1;
 	private static int days = defaultDays; // set 8 means recent 7 days
 											// statistics
-
 	public View chart;
+	
+	final String Backup_succeed = getResources().getString(R.string.Backup_succeed);
+	final String Backup_fail = getResources().getString(R.string.Backup_fail);
+	final String Restore_succeed = getResources().getString(R.string.Restore_succeed);
+	final String Restore_fail = getResources().getString(R.string.Restore_fail);
+	final String Read_total = getResources().getString(R.string.Read_total);
+	final String Pages_today = getResources().getString(R.string.Pages_today);
+	final String Pages_total = getResources().getString(R.string.Pages_total);
+	final String Books = getResources().getString(R.string.Books);
+	final String Email = getResources().getString(R.string.Email);
+	final String Author = getResources().getString(R.string.Author);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -113,18 +121,18 @@ public class ReadLog extends Activity {
 		textNum = (TextView) findViewById(R.id.textView1);
 		logLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
 		scale = (SeekBar) findViewById(R.id.seekBar1);
-
+		
 		button_restore.setEnabled(true);
-		scale.setMax(365 - days + 1); // to show last (4 months = 120 days) log
+		scale.setMax(365 - days + 1); 	// to show last (4 months = 120 days) log
 										// data within one chart
 
 		// to show Total read pages marked with red color
 		// 每结束一个page，再操作db
 		// to initialize today's log data
 		dbHandler(0);
-		textNum.setText("Read total " + Integer.toString(TotalNum)
-				+ " pages, today " + Integer.toString(TodayNum)
-				+ " pages, total " + BookNum + " books");
+		textNum.setText(Read_total + Integer.toString(TotalNum)
+				+ Pages_today + Integer.toString(TodayNum)
+				+ Pages_total + BookNum + Books);
 		textNum.setTextColor(android.graphics.Color.RED);
 		TotalNum = 0;
 
@@ -163,9 +171,9 @@ public class ReadLog extends Activity {
 				// vibrate
 				// vt.vibrate(1000);
 
-				textNum.setText("Read total " + Integer.toString(TotalNum)
-						+ " pages, today " + Integer.toString(TodayNum)
-						+ " pages, total " + BookNum + " books");
+				textNum.setText(Read_total + Integer.toString(TotalNum)
+						+ Pages_today + Integer.toString(TodayNum)
+						+ Pages_total + BookNum + Books);
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
 
@@ -191,9 +199,9 @@ public class ReadLog extends Activity {
 				// vibrate
 				// vt.vibrate(1000);
 
-				textNum.setText("Read total " + Integer.toString(TotalNum)
-						+ " pages, today " + Integer.toString(TodayNum)
-						+ " pages, total " + BookNum + " books");
+				textNum.setText(Read_total + Integer.toString(TotalNum)
+						+ Pages_today + Integer.toString(TodayNum)
+						+ Pages_total + BookNum + Books);
 				textNum.setTextColor(android.graphics.Color.RED);
 				TotalNum = 0;
 
@@ -206,10 +214,10 @@ public class ReadLog extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (copy(FROMPATH, TOPATH) == 0) {
-					Toast.makeText(ReadLog.this, "Backup succeed!",
+					Toast.makeText(ReadLog.this, Backup_succeed,
 							Toast.LENGTH_SHORT).show();
 				} else {
-					Toast.makeText(ReadLog.this, "Backup failed!",
+					Toast.makeText(ReadLog.this, Backup_fail,
 							Toast.LENGTH_SHORT).show();
 				}
 
@@ -221,10 +229,10 @@ public class ReadLog extends Activity {
 			public void onClick(View v) {
 
 				if (copy(TOPATH, FROMPATH) == 0) {
-					Toast.makeText(ReadLog.this, "Restore succeed!",
+					Toast.makeText(ReadLog.this, Restore_succeed,
 							Toast.LENGTH_SHORT).show();
 				} else {
-					Toast.makeText(ReadLog.this, "Restore failed!",
+					Toast.makeText(ReadLog.this, Restore_fail,
 							Toast.LENGTH_SHORT).show();
 				}
 
@@ -251,8 +259,8 @@ public class ReadLog extends Activity {
 			public void onClick(View v) {
 				Toast toast;
 				toast = Toast.makeText(getApplicationContext(),
-						"Author: Tom Xue" + "\n"
-								+ "Email: tomxue0126@gmail.com" + "\n",
+						Author + "Tom Xue" + "\n"
+								+ Email + "tomxue0126@gmail.com" + "\n",
 						Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.BOTTOM, 0, 0);
 				toast.show();
@@ -300,9 +308,9 @@ public class ReadLog extends Activity {
 		// vibrate
 		// vt.vibrate(1000);
 
-		textNum.setText("Read total " + Integer.toString(TotalNum)
-				+ " pages, today " + Integer.toString(TodayNum)
-				+ " pages, total " + BookNum + " books");
+		textNum.setText(Read_total + Integer.toString(TotalNum)
+				+ Pages_today + Integer.toString(TodayNum)
+				+ Pages_total + BookNum + Books);
 		textNum.setTextColor(android.graphics.Color.RED);
 		TotalNum = 0;
 
@@ -315,7 +323,7 @@ public class ReadLog extends Activity {
 		// intent.setClass(ReadLog.this, History.class);
 		// startActivity(intent);
 
-		// 打开或创建tompomodoros.db数据库
+		// 打开或创建readlog.db数据库
 		db = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
 		db.execSQL("CREATE TABLE if not exists mytable (_id INTEGER PRIMARY KEY AUTOINCREMENT, mydate VARCHAR, mydata SMALLINT)");
 		XYMultipleSeriesRenderer renderer = getBarDemoRenderer();
@@ -357,7 +365,7 @@ public class ReadLog extends Activity {
 	private void dbHandler(int pages) {
 		DecimalFormat df = new DecimalFormat("0.000");
 
-		// 打开或创建tompomodoros.db数据库
+		// 打开或创建readlog.db数据库
 		db = openOrCreateDatabase(DBNAME, Context.MODE_PRIVATE, null);
 		// 创建mytable表
 		db.execSQL("CREATE TABLE if not exists mytable (_id INTEGER PRIMARY KEY AUTOINCREMENT, mydate VARCHAR, mydata SMALLINT)");
@@ -498,7 +506,7 @@ public class ReadLog extends Activity {
 	// achartengine related functions below
 	private static XYMultipleSeriesDataset getBarDataset(Context cxt) {
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-		CategorySeries series = new CategorySeries("All technical books");
+		CategorySeries series = new CategorySeries("阅读情况");
 
 		Cursor c = db.rawQuery("SELECT _id, mydate, mydata FROM mytable",
 				new String[] {});
@@ -549,9 +557,9 @@ public class ReadLog extends Activity {
 	}
 
 	private static void setChartSettings(XYMultipleSeriesRenderer renderer) {
-		renderer.setChartTitle("Recent " + Integer.toString(days - 1) + " days");
-		renderer.setXTitle("Date");
-		renderer.setYTitle("Pages");
+		renderer.setChartTitle("最近 " + Integer.toString(days - 1) + " 天");
+		renderer.setXTitle("日期");
+		renderer.setYTitle("页数");
 		renderer.setYAxisMin(0);
 		renderer.setYAxisMax(31);
 		// set it by default
