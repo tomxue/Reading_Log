@@ -76,16 +76,11 @@ public class ReadLog extends Activity {
 											// statistics
 	public View chart;
 	
-	String Backup_succeed;
-	String Backup_fail;
-	String Restore_succeed;
-	String Restore_fail;
-	String Read_total;
-	String Pages_today;
-	String Pages_total;
-	String Books;
-	String myEmail;
-	String Author;
+	String Backup_succeed, Backup_fail, Restore_succeed, Restore_fail;
+	String Read_total, Pages_today, Pages_total, Books;
+	String myEmail, Author;
+	static String Recent, Days, Date, Pages;
+	static String ReadingStatus;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -132,6 +127,11 @@ public class ReadLog extends Activity {
 		Books = getResources().getString(R.string.Books);
 		myEmail = getResources().getString(R.string.Email);
 		Author = getResources().getString(R.string.Author);
+		Recent = getResources().getString(R.string.Recent);
+		Days = getResources().getString(R.string.Days);
+		Date = getResources().getString(R.string.Date);
+		Pages = getResources().getString(R.string.Pages);
+		ReadingStatus = getResources().getString(R.string.ReadingStatus);
 		
 		button_restore.setEnabled(true);
 		scale.setMax(365 - days + 1); 	// to show last (4 months = 120 days) log
@@ -271,7 +271,7 @@ public class ReadLog extends Activity {
 				Toast toast;
 				toast = Toast.makeText(getApplicationContext(),
 						Author + "Tom Xue" + "\n"
-								+ myEmail + "tomxue0126@gmail.com" + "\n",
+								+ myEmail + "tomxue0126@gmail.com",
 						Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.BOTTOM, 0, 0);
 				toast.show();
@@ -517,7 +517,7 @@ public class ReadLog extends Activity {
 	// achartengine related functions below
 	private static XYMultipleSeriesDataset getBarDataset(Context cxt) {
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-		CategorySeries series = new CategorySeries("阅读情况");
+		CategorySeries series = new CategorySeries(ReadingStatus);
 
 		Cursor c = db.rawQuery("SELECT _id, mydate, mydata FROM mytable",
 				new String[] {});
@@ -568,9 +568,9 @@ public class ReadLog extends Activity {
 	}
 
 	private static void setChartSettings(XYMultipleSeriesRenderer renderer) {
-		renderer.setChartTitle("最近 " + Integer.toString(days - 1) + " 天");
-		renderer.setXTitle("日期");
-		renderer.setYTitle("页数");
+		renderer.setChartTitle(Recent + Integer.toString(days - 1) + Days);
+		renderer.setXTitle(Date);
+		renderer.setYTitle(Pages);
 		renderer.setYAxisMin(0);
 		renderer.setYAxisMax(31);
 		// set it by default

@@ -17,11 +17,16 @@
     <string name="Backup_fail">备份失败！</string>
     <string name="Restore_succeed">恢复成功！</string>
     <string name="Restore_fail">恢复失败！</string>
-    <string name="Read_total">已读总计</string>
-    <string name="Pages_today"> 页, 今天 </string>
-    <string name="Pages_total"> 页, 总计 </string>
-    <string name="Books"> 本书</string>
-    <string name="Email">电子邮件: </string>
-    <string name="Author">作者: </string>
+    <string name="Read_total">已读总计&#160;</string>
+    <string name="Pages_today">&#160;页, 今天 &#160;</string>
+    <string name="Pages_total">&#160;页, 总计 &#160;</string>
+    <string name="Books">&#160;本书</string>
+    <string name="Email">电子邮件:&#160;</string>
+    <string name="Author">作者:&#160;</string>
+    <string name="Recent">最近&#160;</string>
+    <string name="Days">&#160;天</string>
+    <string name="Date">日期</string>
+    <string name="Pages">页数</string>
+    <string name="ReadingStatus">阅读情况</string>
 
 </resources>
